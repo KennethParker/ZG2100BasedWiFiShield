@@ -35,7 +35,7 @@
  *****************************************************************************/
 
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "WiServer.h"
 
 extern "C" {
@@ -209,7 +209,7 @@ void Server::printTime(long t) {
 /*
  * Writes a byte to the virtual buffer for the current connection
  */
-void Server::write(uint8_t b) {
+size_t Server::write(uint8_t b) {
 
 	// Make sure there's a current connection
 	if (uip_conn) {
@@ -219,8 +219,10 @@ void Server::write(uint8_t b) {
 		if ((offset >= 0) && (offset < (int)uip_conn->mss)) {
 			// Write the byte to the corresponding location in the buffer
 			*((char*)uip_appdata + offset) = b;
+			return sizeof(uint8_t);
 		}
 	}
+	return 0;
 }
 
 
